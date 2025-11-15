@@ -173,6 +173,7 @@ def calculate_coco_fid(
     return calculate_fid(coco_stats, model, device=device, seed=seed, batch_size=batch_size)
 
 
+@torch.no_grad
 def calculate_clip_score(
     image_paths: List[str],
     captions_mapping: Dict[str, str],
@@ -214,7 +215,7 @@ def calculate_clip_score(
         ).to(torch.float32)
 
         score = (image_features * caption_features).sum()
-        score_acc += score
+        score_acc += score.item()
         num_samples += image.shape[0]
 
     clip_score = score_acc / num_samples
